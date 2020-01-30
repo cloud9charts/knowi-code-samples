@@ -1,0 +1,29 @@
+.new-dashboard-button {
+    background: #4c2525;
+    border: 1px solid transparent !important;
+    text-decoration: none;
+    color: #fff !important;
+    border-color: #4c2525 !important;
+    outline: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition-duration: 300ms;
+    padding: 0;
+    margin: 0;
+    font-size: 16px !important;
+    font-weight: normal;
+    padding: 7px 25px;
+    border-radius: 4px;
+    font-size: 13px;
+    border: 1px solid #4c2525 !important;
+    background-color: #4c2525 !important;
+    letter-spacing: .2px;
+    font-weight: normal !important;
+    padding: 10px 25px 12px 28px;
+    white-space: nowrap;
+    font-family: NHaasGroteskTXW01-75Bd, Arial, Helvetica, sans-serif !important;
+}
+
+section.sidemenu {
+    background-color: #4c2525
+}
