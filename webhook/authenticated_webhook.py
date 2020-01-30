@@ -1,7 +1,17 @@
-from datetime import datetime, timedelta
 import os
 
+from datetime import datetime, timedelta
 from flask import Flask, abort, jsonify, request
+
+"""
+Notes: Knowi's Webhook only takes HTTPS calls. To run this locally, consider using NGROK and in your Knowi account, 
+pass in your NGROK HTTPS URL (i.e. https://949eas4a.ngrok.io/auth, https://949eas4a.ngrok.io/webhook)
+
+
+Two step call which first validates the /auth endpoint for the WEBHOOK_VERIFY_TOKEN and AUTH_HEADER value 
+before processing data sent to /webhook
+
+"""
 
 WEBHOOK_VERIFY_TOKEN = os.environ.get('WEBHOOK_VERIFY_TOKEN')
 AUTH_HEADER = os.environ.get('AUTH_HEADER')
@@ -52,13 +62,3 @@ def webhook():
 
 if __name__ == '__main__':
     app.run()
-
-"""
-# https://ogma-dev.github.io/posts/simple-flask-webhook/
-- need to use NGROK since knowi only takes HTTPS requests
-
-
-url to invoke: https://9449ef4a.ngrok.io/webhook
-auth url: https://9449ef4a.ngrok.io/auth?verifyToken=knowi
-auth header: x-api-key: 5d9606972ed4db16bdb2d620
-"""
