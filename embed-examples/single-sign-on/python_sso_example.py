@@ -1,6 +1,7 @@
-import requests
 import os
+
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -20,7 +21,7 @@ class Knowi:
         rsp = requests.post(HOST + '/sso/user/create', data=payload)
         if rsp.ok:
             user_token = rsp.text
-            print(f'***NEW SSO USER TOKEN CREATED: {user_token}***')
+            print(f'*** NEW SSO USER TOKEN CREATED: {user_token} ***')
 
             return user_token
 
@@ -33,7 +34,7 @@ class Knowi:
         if rsp.ok:
             session_token = rsp.text
             login_url = f"{HOST}/sso/user/login?token={session_token}"
-            print(f'***NEW SSO USER SESSION CREATED: {session_token}***')
+            print(f'*** NEW SSO USER SESSION CREATED: {session_token} ***')
 
             return login_url
 
