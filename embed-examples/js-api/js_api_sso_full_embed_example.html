@@ -17,10 +17,7 @@
         function loadChart() {
             Knowi.render('#knowi-div', {
                 type: 'single',
-                dashboard: '',
-                dashboardId: 160783,
-                token: "rFWoyWJWrvRMeisNhChXqgs40xRvSgs4ZorynqeGnvyIie",
-                hash: "",
+                token: "pHe6ZsSuGx4C092424tPII8dsIpfkjLEzLm7TtCtspnvjhGAie",
                 url: "https://knowi.com/",
                 view: {
                     title: true,
@@ -44,7 +41,6 @@
                     analytics: false,
                     backgroundColor: 'rgba(201, 76, 76, 0.6)',
                     css: ["https://viaattachments.blob.core.windows.net/testcontainer/knowi.css"],
-                    contentFilters: [{"fieldName": "name", "values": ["Lager"], "operator": "="}]
                 }
             }, function () {
             });
@@ -54,7 +50,7 @@
 
 <BODY onload="loadChart()">
 <H2> Knowi Embed: JS API</H2>
-<span>Example embed with Single Sign On</span>
+<span>Example embedding the full Knowi web application with Single Sign On</span>
 <div id="knowi-div"></div>
 
 </BODY>

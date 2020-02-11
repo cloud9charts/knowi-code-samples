@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<HEAD>
+
+    <style>
+        #knowi-div {
+            width: 1500px;
+            height: 800px;
+        }
+    </style>
+    <script src="https://knowi.com/minify/knowi-api.min.js"></script>
+
+    <!-- *********** Edit here *********** -->
+    <title>Knowi Embed: JS API</title>
+    <script>
+        function loadChart() {
+            Knowi.render('#knowi-div', {
+                type: 'share',
+                dashboard: 'OGV2EdejtHsnDiixFQ7TGyzLamxFKyisMhBEccNLkd7mUie',
+                url: "https://knowi.com/",
+                view: {
+                    title: true,
+                    filter: true,
+                    autoHeight: false,
+                    border: true,
+                    setting: true,
+                    resize: true,
+                    menu: true,
+                    menuOptions: {
+                        logo: false,
+                        logout: false,
+                        ml: false,
+                        datasources: false
+                    },
+                    actions: true,
+                    widgetSpacing: 10,
+                    drag: true,
+                    header: true,
+                    scroll: true,
+                    analytics: false,
+                    backgroundColor: 'rgba(201, 76, 76, 0.6)',
+                    css: ["https://viaattachments.blob.core.windows.net/testcontainer/knowi.css"],
+                    contentFilters: [{"fieldName": "name", "values": ["Lager"], "operator": "="}]
+                }
+            }, function () {
+            });
+        }
+    </script>
+</HEAD>
+
+<BODY onload="loadChart()">
+<H2> Knowi Embed: JS API</H2>
+<span>Example embedding a simple dashboard without authentication</span>
+<div id="knowi-div"></div>
+
+</BODY>
+
+</html>
