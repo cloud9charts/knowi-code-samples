@@ -1,0 +1,350 @@
+<div id="data" style="display:none;">
+    {{_table|Name,Value,date_display,lastValue,rank,Date}}
+</div>
+<style>
+    text {
+        font-size: 16px;
+        font-family: Open Sans, sans-serif;
+    }
+
+    text.title {
+        font-size: 24px;
+        font-weight: 500;
+    }
+
+    text.subTitle {
+        font-weight: 500;
+        fill: #777777;
+    }
+
+    text.caption {
+        font-weight: 400;
+        font-size: 14px;
+        fill: #777777;
+    }
+
+    text.label {
+        font-weight: 100;
+        font-size: 12px;
+    }
+
+    text.valueLabel {
+        font-weight: 300;
+    }
+
+    text.dateText {
+        font-size: 64px;
+        font-weight: 700;
+        opacity: 0.25;
+    }
+
+    .tick text {
+        fill: #777777;
+    }
+
+    .xAxis .tick:nth-child(2) text {
+        text-anchor: start;
+    }
+
+    .tick line {
+        shape-rendering: CrispEdges;
+        stroke: #dddddd;
+    }
+
+    .tick line.origin {
+        stroke: #aaaaaa;
+    }
+
+    path.domain {
+        display: none;
+    }
+
+    #presentation {
+        height: 90vh;
+        width: 90vw;
+    }
+</style>
+<div id="presentation"></div>
+<script>
+    // Feel free to change or delete any of the code you see in this editor!
+    var iframe = document.getElementsByTagName('iframe');
+    for (i = 0; i < iframe.length; i++) {
+        var innerDoc = iframe[i].contentDocument || iframe[i].contentWindow.document;
+    }
+    var presentation$ = innerDoc.getElementById('presentation');
+    var data$ = innerDoc.getElementById('data');
+    var listTr = data$.getElementsByTagName('table')[0].getElementsByTagName('tr');
+    var data = [];
+    Array.prototype.forEach.call(listTr, function(tr) {
+        if (tr.className === "") {
+            var listTd = tr.getElementsByTagName('td');
+            var itemData = {};
+            Array.prototype.forEach.call(listTd, function(td) {
+                var key = td.attributes['data-field'].value;
+                itemData[key] = td.innerText;
+            });
+            data.push(itemData);
+        }
+    });
+    var height = presentation$.offsetHeight;
+    var width = presentation$.offsetWidth;
+
+    var svg = d3.select(presentation$).append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var tickDuration = 1500;
+
+    var top_n = 8;
+
+    const margin = {
+        top: 80,
+        right: 0,
+        bottom: 5,
+        left: 5
+    };
+
+    let barPadding = (height - (margin.bottom + margin.top)) / (top_n * 5);
+
+    // let title = svg.append('text')
+    //     .attr('class', 'title')
+    //     .attr('y', 24)
+    //     .html('18 years of Interbrand’s Top Global Brands');
+    //
+    // let subTitle = svg.append("text")
+    //     .attr("class", "subTitle")
+    //     .attr("y", 55)
+    //     .html("Brand value, $m");
+    //
+    // let caption = svg.append('text')
+    //     .attr('class', 'caption')
+    //     .attr('x', width)
+    //     .attr('y', height-5)
+    //     .style('text-anchor', 'end')
+    //     .html('Source: Interbrand');
+
+    let date, minDate, maxDate;
+  d3.csv('/api/data/ipE4xJhLBkn8H8jisFisAdHKvepFR5I4bGzRySZ2aaXlJgie?entityName=Dynamic%20Covid-19%20Timeline%20Formated%20Data&exportFormat=csv&c9SqlFilter=select%20*%20order%20by%20date%20asc%2C%20rank%20asc', function(data) {   
+        //if (error) throw error;
+
+        //console.log(data);
+    const halo = function (text, strokeWidth) {
+        text.select(function () {
+            return this.parentNode.insertBefore(this.cloneNode(true), this);
+        })
+            .style('fill', '#ffffff')
+            .style('stroke', '#ffffff')
+            .style('stroke-width', strokeWidth)
+            .style('stroke-linejoin', 'round')
+            .style('opacity', 1);
+
+    }
+        data.forEach(function (d) {
+            d.Value = parseInt(d.Value),
+                d.lastValue = parseInt(d.lastValue),
+                d.lastValue = isNaN(d.lastValue) ? 0 : parseInt(d.lastValue),
+                d.Value = isNaN(d.Value) ? 0 : parseInt(d.Value),
+                d.Date = parseInt(d.Date),
+                d.colour = d3.hsl(Math.random() * 360, 0.75, 0.75),
+                d.rank = parseInt(d.rank),
+                minDate = (minDate === undefined) ? d.Date : (minDate > d.Date ? d.Date : minDate),
+                maxDate = (maxDate === undefined) ? d.Date : (maxDate < d.Date ? d.Date : maxDate)
+        });
+
+        date = minDate;
+
+        console.log(minDate);
+        console.log(maxDate);
+
+        let dateSlice = data.filter(d => d.Date == date && !isNaN(d.Value))
+            .sort((a, b) => b.Value - a.Value)
+            .slice(0, top_n);
+
+        dateSlice.forEach((d, i) => d.rank = i);
+
+        let x = d3.scale.linear()
+            .domain([0, d3.max(dateSlice, d => d.Value)])
+            .range([margin.left, width - margin.right - 65]);
+        let y = d3.scale.linear()
+            .domain([top_n, 0])
+            .range([height - margin.bottom, margin.top]);
+
+        let xAxis = d3.svg.axis().orient("top")
+            .scale(x)
+            .ticks(width > 500 ? 5 : 2)
+            .tickSize(-(height - margin.top - margin.bottom))
+            .tickFormat(d => d3.format(',')(d));
+
+        svg.append('g')
+            .attr('class', 'axis xAxis')
+            .attr('transform', `translate(0
+, ${margin.top})`)
+            .call(xAxis)
+            .selectAll('.tick line')
+            .classed('origin', d => d == 0);
+
+        svg.selectAll('rect.bar')
+            .data(dateSlice, d => d.Name)
+            .enter()
+            .append('rect')
+            .attr('class', 'bar')
+            .attr('x', x(0) + 1)
+            .attr('width', d => x(d.Value) - x(0) - 1)
+            .attr('y', d => y(d.rank) + 5)
+            .attr('height', y(1) - y(0) - barPadding)
+            .style('fill', d => d.colour);
+
+        svg.selectAll('text.label')
+            .data(dateSlice, d => d.Name)
+            .enter()
+            .append('text')
+            .attr('class', 'label')
+            .attr('x', d => x(d.Value) - 8)
+            .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1)
+            .style('text-anchor', 'end')
+            .html(d => d.Name);
+
+        svg.selectAll('text.valueLabel')
+            .data(dateSlice, d => d.Name)
+            .enter()
+            .append('text')
+            .attr('class', 'valueLabel')
+            .attr('x', d => x(d.Value) + 5)
+            .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1)
+            .text(d => d3.format(',.0f')(d.lastValue));
+
+        let dateText = svg.append('text')
+            .attr('class', 'dateText')
+            .attr('x', width - margin.right)
+            .attr('y', height - 25)
+            .style('text-anchor', 'end')
+            .html(moment(Math.trunc(date)).format('DD MMM'))
+            .call(halo, 10);
+
+
+        let ticker = d3.interval(e => {
+
+            dateSlice = data.filter(d => d.Date == date && !isNaN(d.Value))
+                .sort((a, b) => b.Value - a.Value)
+                .slice(0, top_n);
+
+            dateSlice.forEach((d, i) => d.rank = i);
+
+
+            x.domain([0, d3.max(dateSlice, d => d.Value)]);
+
+            svg.select('.xAxis')
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .call(xAxis);
+
+            let bars = svg.selectAll('.bar').data(dateSlice, d => d.Name);
+
+            bars
+                .enter()
+                .append('rect')
+                .attr('class', d => `bar ${d.Name.replace(/s/g, '_')}`)
+                .attr('x', x(0) + 1)
+                .attr('width', d => x(d.Value) - x(0) - 1)
+                .attr('y', d => y(top_n + 1) + 5)
+                .attr('height', y(1) - y(0) - barPadding)
+                .style('fill', d => d.colour)
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('y', d => y(d.rank) + 5);
+
+            bars
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('width', d => x(d.Value) - x(0) - 1)
+                .attr('y', d => y(d.rank) + 5);
+
+            bars
+                .exit()
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('width', d => x(d.Value) - x(0) - 1)
+                .attr('y', d => y(top_n + 1) + 5)
+                .remove();
+
+            let labels = svg.selectAll('.label')
+                .data(dateSlice, d => d.Name);
+
+            labels
+                .enter()
+                .append('text')
+                .attr('class', 'label')
+                .attr('x', d => x(d.Value) - 8)
+                .attr('y', d => y(top_n + 1) + 5 + ((y(1) - y(0)) / 2))
+                .style('text-anchor', 'end')
+                .html(d => d.Name)
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1);
+
+
+            labels
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('x', d => x(d.Value) - 8)
+                .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1);
+
+            labels
+                .exit()
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('x', d => x(d.Value) - 8)
+                .attr('y', d => y(top_n + 1) + 5)
+                .remove();
+
+
+            let valueLabels = svg.selectAll('.valueLabel').data(dateSlice, d => d.Name);
+
+            valueLabels
+                .enter()
+                .append('text')
+                .attr('class', 'valueLabel')
+                .attr('x', d => x(d.Value) + 5)
+                .attr('y', d => y(top_n + 1) + 5)
+                .text(d => d3.format(',.0f')(d.lastValue))
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1);
+
+            valueLabels
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('x', d => x(d.Value) + 5)
+                .attr('y', d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1)
+                .tween("text", function (d) {
+                    let i = d3.interpolateRound(d.lastValue, d.Value);
+                    return function (t) {
+                        this.textContent = d3.format(',')(i(t));
+                    };
+                });
+
+
+            valueLabels
+                .exit()
+                .transition()
+                .duration(tickDuration)
+                .ease("linear")
+                .attr('x', d => x(d.Value) + 25)
+                .attr('y', d => y(top_n + 1) + 25)
+                .remove();
+
+            dateText.html(moment(Math.trunc(date)).format('DD MMM'));
+            if (date == maxDate) ticker.stop();
+            date = parseInt(moment.tz(date, 'America/Los_Angeles').add(1, 'days').format('x'));
+        }, tickDuration);
+});
+</script>
