@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<HEAD>
+
+    <style>
+        #knowi-div {
+            width: 1500px;
+            height: 800px;
+        }
+    </style>
+    <script src="https://knowi.com/minify/knowi-api.min.js"></script>
+
+    <!-- *********** Edit here *********** -->
+    <title>Knowi Embed: JS API</title>
+    <script>
+        function loadChart() {
+            Knowi.render('#knowi-div', {
+                type: 'nlp',
+                token: "gGgqyGM1X1HfgFKrSpyGOKZIFqhU4LWcS3y1MTR0ByUie",
+            }, function () {
+            });
+        }
+    </script>
+</HEAD>
+
+<BODY onload="loadChart()">
+<H2> Knowi Embed: JS API</H2>
+<span>Example embedding the <a href="https://www.knowi.com/search-based-analytics/">Search Based Analytics</a> with Single Sign On</span>
+<div id="knowi-div"></div>
+
+</BODY>
+
+</html>
