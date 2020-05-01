@@ -1,0 +1,7 @@
+<a href="#" onclick="$('.my_widgets').hide();$('#widget1').show().css({'visibility':'visible'})">option1</a>
+<a href="#" onclick="$('.my_widgets').hide();$('#widget2').show().css({'visibility':'visible'})">option2</a>
+<a href="#" onclick="$('.my_widgets').hide();$('#widget3').show().css({'visibility':'visible'})">option3</a>
+
+<span id="widget1" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName1> }}</span>
+<span id="widget2" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName2> }}</span>
+<span id="widget3" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName3> }}</span>
