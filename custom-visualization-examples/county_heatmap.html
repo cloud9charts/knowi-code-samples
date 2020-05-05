@@ -1,0 +1,81 @@
+<script>
+    var _this = this;
+
+    d3.json("https://knowigeojsonfiles.s3.amazonaws.com/counties.min.js", function (data) {
+        L.geoJson(data, {style: style, onEachFeature: onEachFeature}).addTo(map);
+    });
+
+    finalData = {};
+    var row, max, min, higestCountFips;
+    var startLat = props["geo.coords.lat"];
+
+    for (var i = 0; i < data.length; i++) {
+        row = data[i];
+        var val = row.values;
+        var fips = row.fips;
+        if (!max) {
+            max = val;
+            min = val;
+            highestCountFips = fips;
+        } else if (val > max) {
+            max = val;
+            highestCountFips = fips;
+        } else if (val < min) {
+            min = val;
+        }
+        finalData[+row.fips] = row;
+    }
+
+
+    // the function for setting the style
+    function style(feature) {
+        var colorScaleExp = "white";
+        //if geometry is defined, get the color from the d3 RdPu colormap
+        if (finalData[+feature.id] !== undefined) {
+            var scale = d3.scaleLinear()
+                .domain([min, max])
+                .range([0, 1]);
+            colorScaleExp = d3.interpolateReds(scale(finalData[+feature.id].values));
+        }
+
+        return {
+            fillColor: colorScaleExp,
+            color: "lightgray",
+            weight: 1,
+            fillOpacity: 0.75
+        };
+    }
+
+    // Define a function that will get called for each geometry feature
+    // This will add a Popup feature for each feature
+    function onEachFeature(feature, layer) {
+        if (finalData[+feature.id] !== undefined) {
+
+            var row = finalData[+feature.id];
+
+            var value = finalData[+feature.id].values;
+            if (feature.id == highestCountFips && !startLat) {
+                startLat = feature.geometry.coordinates[0][0][1];
+                startLon = feature.geometry.coordinates[0][0][0];
+                // Set the center to the highest county
+                map.panTo(new L.LatLng(startLat, startLon));
+            }
+
+            // define the popup content
+            var content = `<div>County Name: ${feature.properties.name}</div>
+                          <div>Value: ${value}</div>`
+
+            // bind the popup to the layer
+            layer.bindPopup(content, {'offset': L.point(0, -50)});
+
+            layer.on('mouseover', function (e) {
+                this.openPopup();
+            });
+            layer.on('mouseout', function (e) {
+                this.closePopup();
+            });
+        }
+    }
+
+
+</script>

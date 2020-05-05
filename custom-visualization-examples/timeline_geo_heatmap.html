@@ -1,0 +1,142 @@
+<script>
+    var _this = this;
+
+    d3.json("https://knowigeojsonfiles.s3.amazonaws.com/counties.min.js", function (response) {
+        var currentIndex = 0;
+        var length = data.length;
+        var date = data[0].Date;
+
+        function renderOneDay() {
+            var items = [];
+            for (var i = currentIndex; i < length; i++) {
+                if (data[i].Date == date) {
+                    items.push(data[i]);
+                    if (i == length - 1) {
+                        render(items, response);
+                    }
+                } else {
+                    render(items, response);
+                    currentIndex = i;
+                    date = data[i].Date;
+                    setTimeout(renderOneDay, 500);
+                    break;
+                }
+            }
+        }
+
+        renderOneDay();
+
+    });
+
+    finalData = {};
+    var row, max, min, higestCountFips, geoJson;
+    var startLat = props["geo.coords.lat"];
+
+    // the function for setting the style
+    function style(feature) {
+        var colorScaleExp = "white";
+        //if geometry is defined, get the color from the d3 RdPu colormap
+        if (finalData[+feature.id] !== undefined) {
+            var scale = d3.scaleLinear()
+                .domain([0, 400])
+                .range([0, 1]);
+            colorScaleExp = d3.interpolateReds(scale(finalData[+feature.id].values));
+        }
+
+        return {
+            fillColor: colorScaleExp,
+            color: "lightgray",
+            weight: 1,
+            fillOpacity: 0.75
+        };
+    }
+
+    // Define a function that will get called for each geometry feature
+    // This will add a Popup feature for each feature
+    function onEachFeature(feature, layer) {
+        if (finalData[+feature.id] !== undefined) {
+
+            var row = finalData[+feature.id];
+
+            var value = finalData[+feature.id].values;
+            if (feature.id == highestCountFips && !startLat) {
+                try {
+                    if (feature.geometry.type === "Polygon") {
+                        startLat = feature.geometry.coordinates[0][0][1];
+                        startLon = feature.geometry.coordinates[0][0][0];
+                    } else {
+                        startLat = feature.geometry.coordinates[0][0][0][1];
+                        startLon = feature.geometry.coordinates[0][0][0][0];
+                    }
+                    // Set the center to the highest county
+                    map.panTo(new L.LatLng(startLat, startLon));
+                } catch (e) {
+                }
+            }
+
+            // define the popup content
+            var content = `<div>County Name: ${feature.properties.name}</div>
+                              <div>Value: ${value}</div>`
+
+            // bind the popup to the layer
+            layer.bindPopup(content, {'offset': L.point(0, -50)});
+
+            layer.on('mouseover', function (e) {
+                this.openPopup();
+            });
+            layer.on('mouseout', function (e) {
+                this.closePopup();
+            });
+        }
+    }
+
+    var legendDiv;
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        legendDiv = div;
+        div.innerHTML = moment(data[0].Date).format('DD MMM');
+        div.style.fontSize = '64px';
+        div.style.fontWeight = 700;
+        div.style.opacity = 0.25;
+        div.style.color = 'black';
+        div.style.fontFamily = 'Open Sans, sans-serif;'
+        return div;
+    };
+
+    legend.addTo(map);
+
+    function render(items, response) {
+        for (var i = 0; i < items.length; i++) {
+            row = items[i];
+
+            var val = row.values;
+            var fips = row.fips;
+            if (fips != 0) {
+                if (!max) {
+                    max = val;
+                    min = val;
+                    highestCountFips = fips;
+                } else if (val > max) {
+                    max = val;
+                    highestCountFips = fips;
+                } else if (val < min) {
+                    min = val;
+                }
+                finalData[+row.fips] = row;
+            }
+        }
+
+        if (geoJson) {
+            geoJson.clearLayers();
+        }
+        geoJson = L.geoJson(response, {style: style, onEachFeature: onEachFeature}).addTo(map);
+
+        if (legend) {
+            legendDiv.innerHTML = moment(items[0].Date).format('DD MMM');
+        }
+    }
+
+
+</script>
