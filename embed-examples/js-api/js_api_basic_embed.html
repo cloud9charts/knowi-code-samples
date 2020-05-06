@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<HEAD>
+    <style>
+        #knowi-div {
+            width: 1500px;
+            height: 800px;
+        }
+    </style>
+    <script src="https://knowi.com/minify/knowi-api.min.js"></script>
+
+    <!-- *********** Edit here *********** -->
+    <title>Knowi Embed: JS API</title>
+    <script>
+        function loadChart() {
+            Knowi.render('#knowi-div', {
+                type: 'share',
+                dashboard: 'BYhXXCeu0Ego8zA1FqtLOOM4BDWot5AYBLI7PWrQTbsie',
+                url: "https://knowi.com/",
+                view: {
+                    title: true,
+                    header: true
+                }
+            }, function () {
+            });
+        }
+    </script>
+</HEAD>
+
+<BODY onload="loadChart()">
+<H2> Knowi Embed: JS API</H2>
+<span>Example embedding a simple dashboard without authentication</span>
+<div id="knowi-div"></div>
+
+</BODY>
+
+</html>
