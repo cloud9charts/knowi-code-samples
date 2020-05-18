@@ -14,19 +14,35 @@
     <!-- *********** Edit here *********** -->
     <title>Knowi Embed: JS API</title>
     <script>
-        function loadChart() {
+        function loadSearchAnalytics() {
             Knowi.render('#knowi-div', {
                 type: 'nlp',
-                token: "gGgqyGM1X1HfgFKrSpyGOKZIFqhU4LWcS3y1MTR0ByUie",
+                token: "efQOStHBIMJfKJXqZ4YPVvo7l1MD1znbaipOpQSIq8S4ie",
+                url: 'https://www.knowi.com',
+                view: {
+                    nlpOptions: {
+                        icon: "off",
+                        css: {
+                            background: 'transparent',
+                            width: '80%'
+                        },
+                        placeholder: "Try: total sales for canada this week",
+                        help: "off",
+                        helpText: "Ability to customize the help text of the question mark"
+                    }
+                }
             }, function () {
             });
         }
     </script>
 </HEAD>
 
-<BODY onload="loadChart()">
+<BODY onload="loadSearchAnalytics()">
 <H2> Knowi Embed: JS API</H2>
+<p> Try out yourself <a href="https://www.knowi.com/coronavirus-dashboards/search-based-analytics-for-covid-19-data/">here</a>
+</p>
 <span>Example embedding the <a href="https://www.knowi.com/search-based-analytics/">Search Based Analytics</a> with Single Sign On</span>
+
 <div id="knowi-div"></div>
 
 </BODY>
