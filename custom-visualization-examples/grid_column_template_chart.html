@@ -1,0 +1,178 @@
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <style>
+        body {
+            font-size: 10pt;
+            color: black;
+            background: transparent;
+        }
+
+        #presentation {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        h3,
+        h4 {
+            margin: 0;
+        }
+
+        .item-title h3 {
+            color: #000000;
+            font-size: 14px;
+        }
+
+        .item-title h4 {
+            font-size: 10px;
+        }
+
+        .image-wrapper {
+            width: 48px;
+            height: 48px;
+            position: relative;
+        }
+
+        .item-head {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            padding-top: 25px;
+        }
+
+        .item-image {
+            display: flex;
+            justify-content: center;
+            flex: 1;
+            align-items: center;
+        }
+
+        .item-head .item-title {
+            padding-bottom: 11px;
+            color: #36436c;
+        }
+
+        .item-column {
+            font-family: Roboto;
+            font-weight: normal;
+            text-align: center;
+            color: #3d455a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            flex: 1;
+            width: 100%;
+            margin: 3% 0;
+            border-right: 1px solid #dbdfe7;
+        }
+
+        .item-column:last-child {
+            border-right: 0;
+        }
+
+        .item-column .item-title {
+            opacity: 0.5;
+            font-size: 10px;
+        }
+
+        .item-column .item-value {
+            font-size: 16px;
+            font-weight: 900;
+            text-align: center;
+            color: #a84c6e;
+        }
+
+        .item-wrapper {
+            margin: 5px;
+            font-family: Roboto;
+            max-width: 280px;
+            width: 100%;
+            text-align: center;
+            border-radius: 3px;
+            border: solid 1px #dbdfe7;
+            background-color: #ffffff;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item-image img {
+            width: 48px;
+            height: auto;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .item-footer {
+            height: 70px;
+            border-radius: 2px;
+            background-color: #f2f4fa;
+            display: flex;
+        }
+    
+    </style>
+</head>
+
+<body>
+<div id="presentation">
+</div>
+<div id="data" style="display:none;">
+    {{_table|SALESNAME,TTL_SALES,TTL_QTY_ORDERED, AVG_SALES, PROFILE_PHOTO, TERRITORY}}
+</div>
+
+<script>
+    var iframe = document.getElementsByTagName('iframe');
+
+    for (i = 0; i < iframe.length; i++) {
+        var innerDoc = iframe[i].contentDocument || iframe[i].contentWindow.document;
+
+        if (innerDoc) {
+            var presentation$ = innerDoc.getElementById('presentation');
+            var data$ = innerDoc.getElementById('data');
+
+            if (data$) {
+                var listTr = data$.getElementsByTagName('table')[0].getElementsByTagName('tr');
+                Array.prototype.forEach.call(listTr, function (tr) {
+                    if (tr.className === "") {
+                        var listTd = tr.getElementsByTagName('td');
+                        var itemData = {};
+                        Array.prototype.forEach.call(listTd, function (td) {
+                            var key = td.attributes['data-field'].value;
+
+                            if (key === 'PROFILE_PHOTO') {
+                                itemData[key] = td.children[0].attributes['src'].value.split(
+                                    '?')[0];
+                            } else {
+                                itemData[key] = td.innerText;
+                            }
+                        });
+                        var wrapper = document.createElement('div');
+                        wrapper.className = 'item-wrapper';
+                        wrapper.innerHTML =
+                            '<div class="item-head"><h3>' + itemData.SALESNAME +
+                            '</h3><div class="item-title"><h4><i>TERRITORY: ' + itemData.TERRITORY +
+                            '</i></h4></div></div><div class="item-footer"><div class="item-column"><div class="item-title">TOTAL SALES ($)</div><div class="item-value">' +
+                            (itemData.TTL_SALES === '' ? 'n/a' : itemData.TTL_SALES) +
+                            '</div></div><div class="item-column"><div class="item-title">TOTAL QTY ORDERED (#)</div><div class="item-value">' +
+                            (itemData.TTL_QTY_ORDERED === '' ? 'n/a' : itemData.TTL_QTY_ORDERED) +
+                            '</div></div><div class="item-column"><div class="item-title">AVG SALES ($)</div><div class="item-value">' +
+                            (itemData.AVG_SALES === '' ? 'n/a' : itemData.AVG_SALES) + '</div>';
+                        presentation$.append(wrapper);
+                    }
+                });
+            }
+        }
+    }
+
+</script>
+
+</body>
+
+</html>
