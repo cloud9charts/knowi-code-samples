@@ -1,3 +1,10 @@
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"
+            integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
 <a href="#" onclick="$('.my_widgets').hide();$('#widget1').show().css({'visibility':'visible'})">option1</a>
 <a href="#" onclick="$('.my_widgets').hide();$('#widget2').show().css({'visibility':'visible'})">option2</a>
 <a href="#" onclick="$('.my_widgets').hide();$('#widget3').show().css({'visibility':'visible'})">option3</a>
@@ -5,3 +12,5 @@
 <span id="widget1" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName1> }}</span>
 <span id="widget2" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName2> }}</span>
 <span id="widget3" class="my_widgets" style="visibility:hidden">{{ _widget|<chartName3> }}</span>
+</body>
+</html>
