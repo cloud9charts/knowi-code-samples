@@ -1,0 +1,184 @@
+<style>
+    .knowi-widgets-container {
+        display: flex;
+        align-items: center;
+        font-family: Open Sans, "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        /*max-width: 100%;*/
+        /*overflow: auto;*/
+    }
+    .knowi-widget {
+        border-radius: 6px;
+        margin: 3.5px;
+        border: 1px solid #c3c6cc;
+        overflow: hidden;
+        flex-grow: 1;
+        flex-basis: 0;
+        /*min-width: 150px;*/
+        /*flex-shrink: 0;*/
+        border-left-width: 4px;
+        border-left-style: solid;
+        padding: 0 15px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-transform: uppercase;
+    }
+    .knowi-widget-header {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 11.2px;
+        font-weight: bold;
+    }
+    .knowi-widget-content {
+        font-size: 20px;
+        color: #5a5c69;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .knowi-widget:nth-child(1) {
+        border-left-color: #55efc4;
+        color: #55efc4;
+    }
+    .knowi-widget:nth-child(2) {
+        border-left-color: #81ecec;
+        color: #81ecec;
+    }
+    .knowi-widget:nth-child(3) {
+        border-left-color: #74b9ff;
+        color: #74b9ff;
+    }
+    .knowi-widget:nth-child(4) {
+        border-left-color: #a29bfe;
+        color: #a29bfe;
+    }
+    .knowi-widget:nth-child(5) {
+        border-left-color: #ffeaa7;
+        color: #ffeaa7;
+    }
+    .knowi-widget:nth-child(6) {
+        border-left-color: #fab1a0;
+        color: #fab1a0;
+    }
+    .knowi-widget:nth-child(7) {
+        border-left-color: #ff7675;
+        color: #ff7675;
+    }
+    .knowi-widget:nth-child(8) {
+        border-left-color: #fd79a8;
+        color: #fd79a8;
+    }
+    .knowi-widget:nth-child(9) {
+        border-left-color: #fdcb6e;
+        color: #fdcb6e;
+    }
+    .forVisibleScroll::-webkit-scrollbar {
+        -webkit-appearance: none;
+        display: inherit;
+    }
+    .forVisibleScroll::-webkit-scrollbar:vertical {
+        -webkit-appearance: none;
+        display: inherit;
+        width: 9px;
+    }
+    .forVisibleScroll::-webkit-scrollbar:horizontal {
+        -webkit-appearance: none;
+        display: inherit;
+        height: 9px;
+    }
+    .forVisibleScroll::-webkit-scrollbar-track {
+        background-color: rgba(57, 57, 57, 0.1);
+        border-radius: 6px;
+    }
+    .forVisibleScroll::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-color: rgba(156, 156, 156, 0.6);
+    }
+    .forVisibleScroll::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(136, 136, 136, 0.9);
+    }
+</style>
+<div class="knowi-widgets-container forVisibleScroll">
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Sent
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="sent">
+            {{_sum|sent}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Opened
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="opened">
+            {{_sum|opened}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Spam
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="spam">
+            {{_sum|spam}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Bounced
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="bounced">
+            {{_sum|bounced}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Delivered
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="delivered">
+            {{_sum|delivered}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Clicks
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="clicks">
+            {{_sum|clicks}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Sum of Conversions
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="conversions">
+            {{_sum|conversions}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Count of Customers
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="customer">
+            {{_count|customer}}
+        </div>
+    </div>
+    <div class="knowi-widget">
+        <div class="knowi-widget-header">
+            Count of Campaigns
+        </div>
+        <div class="knowi-widget-content" onclick="drilldown(this)" data-field="campaign_name">
+            {{_count|campaign_name}}
+        </div>
+    </div>
+</div>
+<script>
+    var widgetId = 26124;
+    function drilldown(el){
+        var obj = {};
+        obj[el.getAttribute('data-field')] = el.textContent.trim();
+        drilldownProxy.trigger('drilldown', obj, widgetId);
+    }
+</script>
