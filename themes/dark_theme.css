@@ -1,0 +1,42 @@
+<style>
+ul#grid-widgets {
+background: #333 !important;
+}
+ul#grid-widgets *,
+.dash-header-row,
+.dash-header-row *{
+background: #333 !important;
+background-color: #333 !important;
+color: white !important;
+}
+ul#grid-widgets .header {
+  border-radius: 0;
+  border-bottom: 1px solid white;
+}
+ul#grid-widgets li svg {
+fill: #333 !important;
+}
+ul#grid-widgets li svg rect.highcharts-background {
+fill: #333 !important;
+}
+ul#grid-widgets li svg rect[fill="#fff"] {
+fill: #333 !important;
+}
+ul#grid-widgets li svg g path[fill="#ffffff"] {
+fill: #333333 !important;
+}
+ul#grid-widgets li svg text {
+fill: #fff !important;
+}
+ul#grid-widgets .gs-resize-handle,
+ul#grid-widgets .gs-w.dragging .gs-resize-handle {
+opacity: 0 !important;
+}
+ul#grid-widgets li table tbody tr[section="header"],
+ul#grid-widgets li table tbody tr[section="header"] {
+background: #444 !important;
+}
+div.body.ui-droppable {
+background: #333 !important;
+}
+</style>
