@@ -1,0 +1,50 @@
+<style>
+    .container {
+        display: flex;
+        min-height: 100%;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        flex-wrap: wrap;
+    }
+    .circle {
+        border-radius: 50%;
+        margin: 10px;
+        aspect-ratio: 1 / 1;
+        text-align: center;
+        /* use either 'flex: 1', for auto scaling circles to stay on same single row*/
+        flex: 1;
+        /* or 'min-width: <_>px' for wrapping on multiple rows*/
+        /*min-width: 200px;*/
+    }
+    .circle:after {
+        content: attr(data-id);
+        position: relative;
+        font-size: 14px;
+        top: 100%;
+    }
+    .green {
+        background-color: #008000;
+    }
+    .red {
+        background-color: #ff0000;
+    }
+</style>
+<script>
+    /* Setup a threshold here. This defines it globally across all metrics you want to track. Define one per metric, if you'd like customized thresholds for each*/
+    var threshold = 0;
+
+    window.addEventListener('load', function(){
+        var circles = document.querySelectorAll('.circle');
+        circles.forEach(function(circle){
+            /* _data is the built-in reference to the underlying data. data-id maps to the field name*/
+            var value = _data[0][circle.getAttribute('data-id')];
+            circle.classList.add(value > threshold ? 'green' : 'red');
+        });
+    });
+</script>
+<div class="container">
+    <div class="circle" data-id="FieldA"></div>
+    <div class="circle" data-id="FieldB"></div>
+    <div class="circle" data-id="FieldC"></div>
+</div>
