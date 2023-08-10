@@ -1,0 +1,52 @@
+<div id="openai-div">Loading...</div>
+<style>
+#openai-div {
+  white-space: pre-wrap;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  padding: 20px; 
+  padding-top: 0px;
+}
+</style>
+
+<script>
+    // Function to call OpenAI API from within the iframe
+    function callOpenAI() {
+        const apiKey = "XXXXXX"; // Replace with your actual API key
+        const prompt = "Explain and Summarize in less than 1000 tokens. Vulnerability " + _data[0]['description'] + ". Action: "+_data[0]['action'];
+        const maxTokens = 2000;
+
+        const apiUrl = 'https://api.openai.com/v1/completions';
+        const requestBody = JSON.stringify({
+            prompt: prompt,
+            max_tokens: maxTokens,
+            temperature: 0,
+            model: "text-davinci-003"
+        });
+
+        // Make the API call
+        fetch(apiUrl + '?api_key=' + apiKey, {
+            method: "POST",
+            body: requestBody,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + apiKey,
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const openaiDiv = document.getElementById("openai-div");
+    		const text = data.choices[0].text;
+  			console.error(data.choices[0]);
+            openaiDiv.textContent = text;
+            
+        })
+        .catch(error => {
+            // Handle errors here
+            console.error(error);
+        });
+    }
+
+    callOpenAI();
+</script>
