@@ -1,0 +1,77 @@
+<!-- Simple Form that submits the data somewhere. -->
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .form-container {
+      width: 300px;
+      margin: 0 auto;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin: 5px 0;
+    }
+    button {
+      background-color: darkblue; /* Updated color */
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+    }
+    .asterisk {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+<div class="form-container">
+  <form id="myForm">
+    <label for="fieldA">Field A<span class="asterisk">*</span></label>
+    <input type="text" id="fieldA" name="fieldA" required>
+
+    <label for="fieldB">Field B<span class="asterisk">*</span></label>
+    <input type="text" id="fieldB" name="fieldB" required>
+
+    <button type="button" onclick="submitForm()">Submit</button>
+    <button type="button" onclick="clearForm()">Clear</button>
+  </form>
+</div>
+
+<script>
+  function submitForm() {
+    var form = document.getElementById("myForm");
+    var inputs = form.querySelectorAll("input[type='text']");
+
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].value.trim() === "") {
+        alert("Please fill in all the fields before submitting the form.");
+        return;
+      }
+    }
+
+    if (form.checkValidity()) {
+      var formData = new FormData(form);
+      fetch("https://eokfb8t1jm0iygz.m.pipedream.net", {
+        method: "POST",
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          alert("Form submitted successfully!");
+        } else {
+          alert("Failed to submit form. Please try again later.");
+        }
+      });
+    }
+  }
+
+  function clearForm() {
+    document.getElementById("myForm").reset();
+  }
+</script>
+</body>
+</html>
