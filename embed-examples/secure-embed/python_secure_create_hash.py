@@ -1,3 +1,4 @@
+# requires cryptography library
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -6,7 +7,6 @@ from base64 import urlsafe_b64encode, urlsafe_b64decode
 from cryptography.hazmat.primitives import padding
 
 class EncryptUtil:
-    # Corrected SALT and CIPHER_IV for unsigned byte values
     SALT = bytes([107, 206, 171, 33, 223, 141, 140, 37, 39, 33, 33, 182, 117, 141, 20, 221, 74, 160, 252, 135])
     KEY_ITERATION_COUNT = 1024
     KEY_SIZE = 128
@@ -48,10 +48,11 @@ class EncryptUtil:
 
 # Example usage
 if __name__ == "__main__":
+    # SSO key from your account
     sso_key = "08b1721058b0490e8808b232ea4931d5"
     key = EncryptUtil.generate_key(sso_key)
 
-    # Encrypt a message
+    # Content Filters payload of the paramaters you want to pass in. 
     content_filters = 'contentFilters=[{"fieldName":"Company","values":["Tesla"],"operator":"="}]'
     encrypted_text = EncryptUtil.encrypt(key, content_filters)
     print(f"Encrypted text: {encrypted_text}")
